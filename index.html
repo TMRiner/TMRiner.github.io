@@ -24,20 +24,21 @@
     }
     .wrap { min-height: 100%; display: grid; grid-template-rows: 1fr auto; }
     .center { display: grid; place-items: center; text-align: center; padding: 24px; }
-    .hero { max-width: 1100px; margin: 0 auto; text-shadow: 0 6px 24px var(--shadow); }
+    .hero { max-width: 1100px; margin: 0 auto; text-shadow: 0 6px 24px var(--shadow); background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; }
     h1 { font-size: clamp(28px, 4.8vw, 56px); margin: 0 0 12px; }
     p.lead { font-size: clamp(15px, 2.5vw, 22px); margin: 0 0 18px; }
     .btn {
       display: inline-block; background: var(--accent); color: #171717; border: 0; border-radius: 14px;
-      padding: 14px 24px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 28px rgba(0,0,0,0.45);
-      font-size: clamp(16px, 2.5vw, 20px);
+      padding: 16px 28px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+      font-size: clamp(18px, 3vw, 24px);
+      min-width: 44px; min-height: 44px; /* better tap target on mobile */
     }
     .btn:active { transform: translateY(1px); }
     .corner {
       position: fixed; right: 12px; bottom: 10px; font-size: 12px; opacity: .9; text-shadow: 0 4px 16px var(--shadow);
     }
     .hidden { display: none !important; }
-    .big-msg { font-size: clamp(24px, 5vw, 56px); line-height: 1.12; text-shadow: 0 6px 24px var(--shadow); }
+    .big-msg { font-size: clamp(24px, 5vw, 56px); line-height: 1.12; text-shadow: 0 6px 24px var(--shadow); background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; }
   </style>
 </head>
 <body>
@@ -66,6 +67,16 @@
     <source src="Milkparty.mp3" type="audio/mpeg" />
   </audio>
 
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+  <form id="rsvpHiddenForm"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSdapxWHBaafMFiLq16tOBszOenmAHdXAmcKfsOERpfOBcaEXw/formResponse"
+        method="POST"
+        target="hidden_iframe"
+        style="display:none;">
+    <input type="hidden" name="entry.877086558" value="I'm going!">
+    <input type="hidden" name="submit" value="Submit">
+  </form>
+
   <script>
     const audioEl = document.getElementById('bgAudio');
     const btn = document.getElementById('goBtn');
@@ -84,11 +95,9 @@
       } catch (_) {}
     }
 
-    async function submitHiddenRSVP(){
-      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdapxWHBaafMFiLq16tOBszOenmAHdXAmcKfsOERpfOBcaEXw/formResponse';
-      const params = new URLSearchParams({ 'entry.877086558': "I'm going!" });
-      try { await fetch(formUrl, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: params }); }
-      catch(_) {}
+    function submitHiddenRSVP() {
+      document.querySelector('input[name="entry.877086558"]').value = "I'm going!";
+      document.getElementById('rsvpHiddenForm').submit();
     }
 
     btn.addEventListener('click', async () => {
